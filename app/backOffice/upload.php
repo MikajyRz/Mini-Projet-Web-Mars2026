@@ -1,6 +1,10 @@
 <?php
 // Endpoint pour l'upload d'images TinyMCE
 
+require '../config/auth.php';
+
+require_login();
+
 $upload_dir = '../public/uploads/';
 $public_base_url = '/uploads/';
 

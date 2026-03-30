@@ -1,6 +1,9 @@
 <?php
 require '../config/db.php';
 require '../config/utils.php';
+require '../config/auth.php';
+
+require_login();
 
 $sql = "SELECT * FROM articles ORDER BY date_publication DESC";
 $stmt = $pdo->query($sql);
@@ -38,12 +41,18 @@ $categories = [
 
     <main class="bo-main">
         <header class="bo-header">
-            <h1>Dashboard - Gestion des Articles</h1>
+            <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+                <h1>Dashboard - Gestion des Articles</h1>
+                <div style="display: flex; align-items: center; gap: 20px;">
+                    <span style="color: #666; font-size: 14px;"><?= escape($_SESSION['username'] ?? 'Utilisateur') ?></span>
+                    <a href="/?page=logout" style="background: #dc3545; color: white; padding: 8px 16px; border-radius: 5px; text-decoration: none; font-size: 14px; border: none; cursor: pointer;">Déconnexion</a>
+                </div>
+            </div>
         </header>
 
         <div class="bo-content">
             <div class="bo-actions">
-                <a href="/?page=add" class="btn btn-primary">+ Ajouter un article</a>
+                <a href="/?page=add" class="btn btn-primary">Ajouter un article</a>
             </div>
 
             <div class="table-container">
