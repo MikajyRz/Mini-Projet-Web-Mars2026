@@ -53,14 +53,14 @@ require '../frontOffice/header.php';
 <div class="article-detail-page">
     <!-- Contenu Principal (À GAUCHE) -->
     <article class="article-detail">
-        <header class="article-detail-header" style="text-align: left;">
+        <header class="article-detail-header">
             <?php if (!empty($a['category_name'])): ?>
-                <span class="category-label" style="font-size: 1rem; margin-bottom: 1rem;"><?= escape($a['category_name']) ?></span>
+                <span class="category-label"><?= escape($a['category_name']) ?></span>
             <?php endif; ?>
             
-            <h1 class="article-detail-title" style="font-size: 3rem; text-align: left;"><?= escape($a['titre']) ?></h1>
+            <h1 class="article-detail-title"><?= escape($a['titre']) ?></h1>
             
-            <div class="article-detail-meta" style="justify-content: flex-start; border-top: 1px solid var(--border-color); border-bottom: 1px solid var(--border-color);">
+            <div class="article-detail-meta">
                 <span>Publié le <?= date('d/m/Y à H:i', strtotime($a['created_at'])) ?></span>
             </div>
         </header>
@@ -76,31 +76,31 @@ require '../frontOffice/header.php';
 
     <!-- Sidebar (À DROITE) - Suggestions de la même catégorie -->
     <aside class="articles-sidebar">
-        <div class="section-title" style="font-size: 1rem; margin-bottom: 1.5rem;">Dans la même rubrique</div>
+        <div class="section-title">Dans la même rubrique</div>
         <?php if (count($suggestedArticles) > 0): ?>
             <?php foreach ($suggestedArticles as $suggested): ?>
-                <article class="article-card article-sidebar-item" style="border-bottom: 1px solid var(--border-color); padding-bottom: 1rem; margin-bottom: 1rem;">
+                <article class="article-card article-sidebar-item">
                     <div class="sidebar-inner">
                         <?php if (!empty($suggested['image_principale'])): ?>
                             <div class="sidebar-image-wrap">
                                 <a href="?page=article&slug=<?= $suggested['slug'] ?>">
-                                    <img class="article-image" src="/uploads/<?= escape($suggested['image_principale']) ?>" alt="<?= escape($suggested['image_alt'] ?? $suggested['titre']) ?>" style="width: 80px; height: 60px;">
+                                    <img class="article-image" src="/uploads/<?= escape($suggested['image_principale']) ?>" alt="<?= escape($suggested['image_alt'] ?? $suggested['titre']) ?>">
                                 </a>
                             </div>
                         <?php endif; ?>
                         <div class="sidebar-text">
-                            <h4 class="article-title" style="font-size: 1.1rem; line-height: 1.3;">
+                            <h4 class="article-title">
                                 <a href="?page=article&slug=<?= $suggested['slug'] ?>">
                                     <?= escape($suggested['titre']) ?>
                                 </a>
                             </h4>
-                            <p class="article-date" style="font-size: 0.8rem; margin-top: 0.3rem;">Le <?= date('d/m/Y', strtotime($suggested['created_at'])) ?></p>
+                            <p class="article-date">Le <?= date('d/m/Y', strtotime($suggested['created_at'])) ?></p>
                         </div>
                     </div>
                 </article>
             <?php endforeach; ?>
         <?php else: ?>
-            <p style="color: var(--text-muted); font-style: italic;">Aucun autre article dans cette rubrique.</p>
+            <p class="no-articles">Aucun autre article dans cette rubrique.</p>
         <?php endif; ?>
     </aside>
 </div>

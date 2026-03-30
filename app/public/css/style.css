@@ -207,6 +207,33 @@ a:hover {
   display: inline-block;
 }
 
+/* Bottom Grid Layout for balance */
+.articles-bottom-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2.5rem;
+  margin-top: 4rem;
+  padding-top: 2rem;
+  border-top: 4px solid var(--primary-color);
+}
+
+.bottom-grid-item {
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: 1.5rem;
+}
+
+.bottom-grid-item .article-image {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  margin-bottom: 1rem;
+}
+
+.bottom-grid-item .article-title {
+  font-size: 1.4rem;
+  line-height: 1.3;
+}
+
 /* Sidebar Articles (spans 4 columns) */
 .articles-sidebar {
   grid-column: span 4;
@@ -239,9 +266,10 @@ a:hover {
 }
 
 .article-sidebar-item .article-excerpt {
-  font-size: 0.95rem;
+  font-size: 0.85rem;
   color: var(--text-muted);
   line-height: 1.45;
+  word-break: break-all;
 }
 
 .article-sidebar-item .article-meta, .article-sidebar-item .article-date {
@@ -300,52 +328,115 @@ a:hover {
 }
 
 .article-detail-header {
-  margin-bottom: 2rem;
-  text-align: center;
+  margin-bottom: 2.5rem;
+  text-align: left;
 }
 
 .article-detail-title {
   font-family: var(--font-serif);
   font-size: 3.5rem;
-  line-height: 1.1;
-  margin-bottom: 1rem;
-  font-weight: 700;
+  line-height: 1.05;
+  margin-bottom: 1.5rem;
+  font-weight: 900;
+  letter-spacing: -0.03em;
+  color: #000;
 }
 
 .article-detail-meta {
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   color: var(--text-muted);
   border-top: 1px solid var(--border-color);
   border-bottom: 1px solid var(--border-color);
-  padding: 1rem 0;
-  margin: 2rem 0;
+  padding: 0.8rem 0;
+  margin: 1.5rem 0;
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   gap: 2rem;
+  text-transform: uppercase;
+  font-weight: 700;
 }
 
 .article-detail-image {
   width: 100%;
-  max-height: 600px;
-  object-fit: cover;
-  margin-bottom: 2rem;
+  height: auto;
+  max-height: none; /* Ne pas recadrer l'image principale */
+  object-fit: contain;
+  margin-bottom: 2.5rem;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.05); /* Effet pro */
 }
 
 .article-detail-content {
   font-family: 'Merriweather', 'Georgia', serif;
-  font-size: 1.2rem;
-  line-height: 1.8;
-  color: var(--text-main);
+  font-size: 1.3rem;
+  line-height: 1.9;
+  color: #222;
+}
+
+/* Le "Chapeau" (Premier paragraphe) */
+.article-detail-content p:first-of-type {
+  font-size: 1.6rem;
+  line-height: 1.5;
+  font-weight: 700;
+  color: #333;
+  margin-bottom: 2.5rem;
+  font-family: var(--font-sans); /* Style moderne pour l'intro */
+}
+
+/* La Lettrine */
+.article-detail-content p:nth-of-type(2)::first-letter {
+  float: left;
+  font-family: var(--font-serif);
+  font-size: 5.5rem;
+  line-height: 0.8;
+  padding-top: 4px;
+  padding-right: 12px;
+  padding-left: 3px;
+  color: var(--primary-color);
+  font-weight: 900;
 }
 
 .article-detail-content p {
+  margin-bottom: 2rem;
+}
+
+/* Habillage PRO des images insérées dans le texte */
+.article-detail-content img {
+  max-width: 45%;
+  height: auto;
+  border-radius: 4px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.08);
   margin-bottom: 1.5rem;
 }
 
+/* Alternance : une à gauche, une à droite pour le rythme */
+.article-detail-content img:nth-of-type(odd) {
+  float: left;
+  margin-right: 2rem;
+}
+
+.article-detail-content img:nth-of-type(even) {
+  float: right;
+  margin-left: 2rem;
+}
+
+/* Empêcher le débordement sur la suite (sidebar/footer) */
+.article-detail-content::after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
 .article-detail-content h2, .article-detail-content h3 {
+  clear: both; /* Les titres cassent le float pour rester propres */
   font-family: var(--font-sans);
-  margin-top: 2rem;
-  margin-bottom: 1rem;
+  margin-top: 3rem;
+  margin-bottom: 1.5rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-size: 1.4rem;
+  border-left: 4px solid var(--primary-color);
+  padding-left: 1rem;
 }
 
 /* Suggested Articles Section */
