@@ -23,7 +23,8 @@ $image_principale = null;
 
 // Traitement de l'upload d'image
 if (isset($_FILES['image_principale']) && $_FILES['image_principale']['size'] > 0) {
-    $upload_dir = '../uploads/';
+    // Changement de chemin d'upload vers public/uploads/
+    $upload_dir = '../public/uploads/';
     
     // Créer le dossier s'il n'existe pas
     if (!is_dir($upload_dir)) {
