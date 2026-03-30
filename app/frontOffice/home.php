@@ -2,18 +2,31 @@
 require '../config/db.php';
 require '../config/utils.php';
 
-$articles = $pdo->query("
+$categoryFilter = $_GET['category'] ?? null;
+$params = [];
+
+$sql = "
     SELECT a.*, c.name as category_name 
     FROM articles a 
-    LEFT JOIN categories c ON a.category_id = c.id 
-    ORDER BY a.created_at DESC
-")->fetchAll();
+    LEFT JOIN categories c ON a.category_id = c.id
+";
 
-$pageTitle = 'Actualités en direct';
+if ($categoryFilter) {
+    $sql .= " WHERE LOWER(c.name) = :category";
+    $params['category'] = strtolower($categoryFilter);
+}
+
+$sql .= " ORDER BY a.created_at DESC";
+
+$stmt = $pdo->prepare($sql);
+$stmt->execute($params);
+$articles = $stmt->fetchAll();
+
+$pageTitle = $categoryFilter ? 'Rubrique ' . ucfirst($categoryFilter) : 'Actualités en direct';
 require '../frontOffice/header.php';
 ?>
 
-<div class="section-title">Actualités en Continu</div>
+<div class="section-title"><?= $categoryFilter ? 'Rubrique : ' . escape(ucfirst($categoryFilter)) : 'Actualités en Continu' ?></div>
 
 <?php if (count($articles) > 0): ?>
     <?php 
@@ -88,24 +101,22 @@ require '../frontOffice/header.php';
             <?php foreach ($remainingArticles as $a): ?>
                 <article class="article-card bottom-grid-item">
                     <?php if (!empty($a['image_principale'])): ?>
-                        <a href="?page=article&slug=<?= $a['slug'] ?>">
-                            <img class="article-image" src="/uploads/<?= escape($a['image_principale']) ?>" alt="<?= escape($a['image_alt'] ?? $a['titre']) ?>">
-                        </a>
+                        <div class="image-frame">
+                            <a href="?page=article&slug=<?= $a['slug'] ?>">
+                                <img class="article-image" src="/uploads/<?= escape($a['image_principale']) ?>" alt="<?= escape($a['image_alt'] ?? $a['titre']) ?>">
+                            </a>
+                        </div>
                     <?php endif; ?>
                     
-                    <div class="article-header-meta" style="margin-top: 0.5rem;">
-                        <?php if (!empty($a['category_name'])): ?>
-                            <span class="category-label"><?= escape($a['category_name']) ?></span>
-                        <?php endif; ?>
-                        <span class="article-date" style="font-size: 0.8rem; color: var(--text-muted); display: block;">Publié le <?= date('d/m/Y', strtotime($a['created_at'])) ?></span>
+                    <div class="article-text-content">
+                        <span class="article-date">Le <?= date('d/m/Y', strtotime($a['created_at'])) ?></span>
+                        
+                        <h4 class="article-title">
+                            <a href="?page=article&slug=<?= $a['slug'] ?>">
+                                <?= escape($a['titre']) ?>
+                            </a>
+                        </h4>
                     </div>
-
-                    <h3 class="article-title">
-                        <a href="?page=article&slug=<?= $a['slug'] ?>">
-                            <?= escape($a['titre']) ?>
-                        </a>
-                    </h3>
-                    <p class="article-excerpt" style="font-size: 0.9rem;"><?= mb_strimwidth(strip_tags($a['corps']), 0, 150, "...") ?></p>
                 </article>
             <?php endforeach; ?>
         </div>

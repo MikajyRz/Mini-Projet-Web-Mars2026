@@ -20,10 +20,14 @@
         </div>
         <nav class="main-nav">
             <a href="/">À la une</a>
-            <a href="#">International</a>
-            <a href="#">Politique</a>
-            <a href="#">Économie</a>
-            <a href="#">Culture</a>
+            <?php 
+            // Récupérer les catégories réelles pour le menu
+            require_once '../config/db.php';
+            $categories_nav = $pdo->query("SELECT * FROM categories ORDER BY name ASC")->fetchAll();
+            foreach ($categories_nav as $cat): 
+            ?>
+                <a href="/?category=<?= urlencode(strtolower($cat['name'])) ?>"><?= escape($cat['name']) ?></a>
+            <?php endforeach; ?>
         </nav>
         <a href="/login" class="login-btn" title="Connexion / Inscription">
             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
