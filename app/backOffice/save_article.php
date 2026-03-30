@@ -52,14 +52,23 @@ if (isset($_FILES['image_principale']) && $_FILES['image_principale']['size'] > 
     }
     
     if ($file_error === UPLOAD_ERR_OK) {
-        // Générer un nom unique pour éviter les collisions
-        $new_file_name = uniqid() . '_' . time() . '.' . $file_ext;
-        $file_path = $upload_dir . $new_file_name;
+        // Générer un nom unique
+        $new_file_name_base = uniqid() . '_' . time();
+        $new_file_name_webp = $new_file_name_base . '.webp';
+        $file_path_webp = $upload_dir . $new_file_name_webp;
         
-        if (move_uploaded_file($file_tmp, $file_path)) {
-            $image_principale = $new_file_name;
+        // Tenter la conversion WebP (max 1200px largeur)
+        if (convert_and_resize_to_webp($file_tmp, $file_path_webp, 1200, 80)) {
+            $image_principale = $new_file_name_webp;
         } else {
-            die("Erreur lors du upload du fichier");
+            // Fallback (ex: format non supporté par GD)
+            $new_file_name = $new_file_name_base . '.' . $file_ext;
+            $file_path = $upload_dir . $new_file_name;
+            if (move_uploaded_file($file_tmp, $file_path)) {
+                $image_principale = $new_file_name;
+            } else {
+                die("Erreur lors du upload du fichier");
+            }
         }
     }
 }

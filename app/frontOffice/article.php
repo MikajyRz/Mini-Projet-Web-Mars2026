@@ -66,7 +66,10 @@ require '../frontOffice/header.php';
         </header>
 
         <?php if (!empty($a['image_principale'])): ?>
-        <img class="article-detail-image" src="/uploads/<?= escape($a['image_principale']) ?>" alt="<?= escape($a['image_alt'] ?? $a['titre']) ?>">
+        <img class="article-detail-image" 
+             src="/uploads/<?= escape($a['image_principale']) ?>" 
+             alt="<?= escape($a['image_alt'] ?? $a['titre']) ?>"
+             fetchpriority="high">
         <?php endif; ?>
 
         <div class="article-detail-content">
@@ -83,8 +86,12 @@ require '../frontOffice/header.php';
                     <div class="sidebar-inner">
                         <?php if (!empty($suggested['image_principale'])): ?>
                             <div class="sidebar-image-wrap">
-                                <a href="?page=article&slug=<?= $suggested['slug'] ?>">
-                                    <img class="article-image" src="/uploads/<?= escape($suggested['image_principale']) ?>" alt="<?= escape($suggested['image_alt'] ?? $suggested['titre']) ?>">
+                                <a href="?page=article&slug=<?= $suggested['slug'] ?>" aria-label="Lire l'article : <?= escape($suggested['titre']) ?>" tabindex="-1">
+                                    <img class="article-image" 
+                                         src="/uploads/<?= escape($suggested['image_principale']) ?>" 
+                                         alt="<?= escape(!empty($suggested['image_alt']) ? $suggested['image_alt'] : $suggested['titre']) ?>"
+                                         loading="lazy" 
+                                         decoding="async">
                                 </a>
                             </div>
                         <?php endif; ?>

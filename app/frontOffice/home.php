@@ -26,7 +26,7 @@ $pageTitle = $categoryFilter ? 'Rubrique ' . ucfirst($categoryFilter) : 'Actuali
 require '../frontOffice/header.php';
 ?>
 
-<div class="section-title"><?= $categoryFilter ? 'Rubrique : ' . escape(ucfirst($categoryFilter)) : 'Actualités en Continu' ?></div>
+<h1 class="section-title"><?= $categoryFilter ? 'Rubrique : ' . escape(ucfirst($categoryFilter)) : 'Actualités en Continu' ?></h1>
 
 <?php if (count($articles) > 0): ?>
     <?php 
@@ -42,8 +42,11 @@ require '../frontOffice/header.php';
             <?php foreach ($heroArticles as $hero): ?>
                 <article class="article-hero">
                     <?php if (!empty($hero['image_principale'])): ?>
-                        <a href="?page=article&slug=<?= $hero['slug'] ?>">
-                            <img class="article-image" src="/uploads/<?= escape($hero['image_principale']) ?>" alt="<?= escape($hero['image_alt'] ?? $hero['titre']) ?>">
+                        <a href="?page=article&slug=<?= $hero['slug'] ?>" aria-label="Lire l'article : <?= escape($hero['titre']) ?>" tabindex="-1">
+                            <img class="article-image" 
+                                 src="/uploads/<?= escape($hero['image_principale']) ?>" 
+                                 alt="<?= escape(!empty($hero['image_alt']) ? $hero['image_alt'] : $hero['titre']) ?>"
+                                 fetchpriority="high">
                         </a>
                     <?php endif; ?>
                     
@@ -72,8 +75,12 @@ require '../frontOffice/header.php';
             <?php foreach ($sidebarArticles as $a): ?>
                 <article class="article-card article-sidebar-item">
                     <?php if (!empty($a['image_principale'])): ?>
-                        <a href="?page=article&slug=<?= $a['slug'] ?>">
-                            <img class="article-image" src="/uploads/<?= escape($a['image_principale']) ?>" alt="<?= escape($a['image_alt'] ?? $a['titre']) ?>">
+                        <a href="?page=article&slug=<?= $a['slug'] ?>" aria-label="Lire l'article : <?= escape($a['titre']) ?>" tabindex="-1">
+                            <img class="article-image" 
+                                 src="/uploads/<?= escape($a['image_principale']) ?>" 
+                                 alt="<?= escape(!empty($a['image_alt']) ? $a['image_alt'] : $a['titre']) ?>"
+                                 loading="lazy" 
+                                 decoding="async">
                         </a>
                     <?php endif; ?>
                     
@@ -102,8 +109,12 @@ require '../frontOffice/header.php';
                 <article class="article-card bottom-grid-item">
                     <?php if (!empty($a['image_principale'])): ?>
                         <div class="image-frame">
-                            <a href="?page=article&slug=<?= $a['slug'] ?>">
-                                <img class="article-image" src="/uploads/<?= escape($a['image_principale']) ?>" alt="<?= escape($a['image_alt'] ?? $a['titre']) ?>">
+                            <a href="?page=article&slug=<?= $a['slug'] ?>" aria-label="Lire l'article : <?= escape($a['titre']) ?>" tabindex="-1">
+                                <img class="article-image" 
+                                     src="/uploads/<?= escape($a['image_principale']) ?>" 
+                                     alt="<?= escape(!empty($a['image_alt']) ? $a['image_alt'] : $a['titre']) ?>"
+                                     loading="lazy"
+                                     decoding="async">
                             </a>
                         </div>
                     <?php endif; ?>

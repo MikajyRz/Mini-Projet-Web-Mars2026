@@ -1,0 +1,23 @@
+<IfModule mod_deflate.c>
+  # Compression Gzip pour HTML, CSS, JS, et XML
+  AddOutputFilterByType DEFLATE text/html text/plain text/xml text/css application/javascript application/x-javascript application/rss+xml application/xml image/svg+xml
+</IfModule>
+
+<IfModule mod_expires.c>
+  # Activation du cache navigateur (TTL)
+  ExpiresActive On
+  ExpiresDefault "access plus 1 month"
+  
+  # Cache spécifique pour les fichiers statiques
+  ExpiresByType image/jpg "access plus 1 year"
+  ExpiresByType image/jpeg "access plus 1 year"
+  ExpiresByType image/gif "access plus 1 year"
+  ExpiresByType image/png "access plus 1 year"
+  ExpiresByType image/webp "access plus 1 year"
+  ExpiresByType text/css "access plus 1 month"
+  ExpiresByType application/javascript "access plus 1 month"
+</IfModule>
+
+# Cacher les signatures du serveur pour la sécurité
+ServerSignature Off
+FileETag None
