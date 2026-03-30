@@ -16,10 +16,17 @@ require '../frontOffice/header.php';
 <div class="section-title">Actualités en Continu</div>
 
 <?php if (count($articles) > 0): ?>
+    <?php 
+    // On divise les articles en sections pour garder l'équilibre
+    $heroArticles = array_slice($articles, 0, 2);
+    $sidebarArticles = array_slice($articles, 2, 4); // Max 4 dans la sidebar pour pas dépasser
+    $remainingArticles = array_slice($articles, 6); // Tous les autres vont en bas
+    ?>
+
     <div class="articles-grid">
-        <!-- Articles principaux (Les 2 premiers) -->
+        <!-- Articles principaux (Les 2 grands) -->
         <div class="hero-container">
-            <?php for ($i = 0; $i < min(2, count($articles)); $i++): $hero = $articles[$i]; ?>
+            <?php foreach ($heroArticles as $hero): ?>
                 <article class="article-hero">
                     <?php if (!empty($hero['image_principale'])): ?>
                         <a href="?page=article&slug=<?= $hero['slug'] ?>">
@@ -43,13 +50,13 @@ require '../frontOffice/header.php';
                         <?= mb_strimwidth(strip_tags($hero['corps']), 0, 400, "...") ?>
                     </div>
                 </article>
-            <?php endfor; ?>
+            <?php endforeach; ?>
         </div>
 
-        <!-- Sidebar des articles suivants (À DROITE) -->
+        <!-- Sidebar (Max 4 pour équilibre) -->
         <div class="articles-sidebar">
-            <div class="section-title" style="font-size: 0.9rem; border-top: 2px solid #000; padding-top: 0.2rem; margin-bottom: 1.5rem;">ACTUALITÉS RÉCENTES</div>
-            <?php for ($i = 2; $i < count($articles); $i++): $a = $articles[$i]; ?>
+            <div class="section-title" style="font-size: 0.9rem; border-top: 2px solid #000; padding-top: 0.2rem; margin-bottom: 1.5rem;">À LIRE AUSSI</div>
+            <?php foreach ($sidebarArticles as $a): ?>
                 <article class="article-card article-sidebar-item">
                     <?php if (!empty($a['image_principale'])): ?>
                         <a href="?page=article&slug=<?= $a['slug'] ?>">
@@ -69,12 +76,40 @@ require '../frontOffice/header.php';
                             <?= escape($a['titre']) ?>
                         </a>
                     </h3>
-                    
-                    <p class="article-excerpt" style="font-size: 0.85rem; color: #444;"><?= mb_strimwidth(strip_tags($a['corps']), 0, 150, "...") ?></p>
                 </article>
-            <?php endfor; ?>
+            <?php endforeach; ?>
         </div>
     </div>
+
+    <!-- NOUVELLE SECTION : Grille de remplissage pour le reste des articles -->
+    <?php if (count($remainingArticles) > 0): ?>
+        <div class="section-title" style="margin-top: 4rem;">Toute l'Actualité</div>
+        <div class="articles-bottom-grid">
+            <?php foreach ($remainingArticles as $a): ?>
+                <article class="article-card bottom-grid-item">
+                    <?php if (!empty($a['image_principale'])): ?>
+                        <a href="?page=article&slug=<?= $a['slug'] ?>">
+                            <img class="article-image" src="/uploads/<?= escape($a['image_principale']) ?>" alt="<?= escape($a['image_alt'] ?? $a['titre']) ?>">
+                        </a>
+                    <?php endif; ?>
+                    
+                    <div class="article-header-meta" style="margin-top: 0.5rem;">
+                        <?php if (!empty($a['category_name'])): ?>
+                            <span class="category-label"><?= escape($a['category_name']) ?></span>
+                        <?php endif; ?>
+                        <span class="article-date" style="font-size: 0.8rem; color: var(--text-muted); display: block;">Publié le <?= date('d/m/Y', strtotime($a['created_at'])) ?></span>
+                    </div>
+
+                    <h3 class="article-title">
+                        <a href="?page=article&slug=<?= $a['slug'] ?>">
+                            <?= escape($a['titre']) ?>
+                        </a>
+                    </h3>
+                    <p class="article-excerpt" style="font-size: 0.9rem;"><?= mb_strimwidth(strip_tags($a['corps']), 0, 150, "...") ?></p>
+                </article>
+            <?php endforeach; ?>
+        </div>
+    <?php endif; ?>
 <?php else: ?>
     <p>Aucun article disponible pour le moment.</p>
 <?php endif; ?>
