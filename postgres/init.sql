@@ -19,9 +19,8 @@ CREATE TABLE users (
 );
 
 -- Insertion d'un utilisateur admin par défaut (mot de passe : admin123)
--- Le hash doit être généré via PHP password_hash('admin123', PASSWORD_BCRYPT)
 INSERT INTO users (username, password) VALUES 
-('admin', '$2y$10$vWf5R2D8rG.5z.q8z5z5.O.5z.q8z5z5.O.5z.q8z5z5.O.5z.q8z5z5.O');
+('admin', '$2y$10$ggPWsY3jqeWADMOBiuZWke0oeB5XG35Vjrg3fhiS0ZMreAheQMnyy');
 
 -- =========================================
 -- Table des catégories

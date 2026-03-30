@@ -1,5 +1,8 @@
 <?php
 require '../config/db.php';
+require '../config/auth.php';
+
+require_login();
 
 $id = $_GET['id'];
 

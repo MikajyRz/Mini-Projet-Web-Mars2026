@@ -1,6 +1,9 @@
 <?php
 require '../config/db.php';
 require '../config/utils.php';
+require '../config/auth.php';
+
+require_login();
 
 // Activer l'affichage des erreurs
 error_reporting(E_ALL);
@@ -23,7 +26,6 @@ $image_principale = null;
 
 // Traitement de l'upload d'image
 if (isset($_FILES['image_principale']) && $_FILES['image_principale']['size'] > 0) {
-    // Changement de chemin d'upload vers public/uploads/
     $upload_dir = '../public/uploads/';
     
     // Créer le dossier s'il n'existe pas

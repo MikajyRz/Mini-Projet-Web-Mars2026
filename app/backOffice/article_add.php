@@ -1,4 +1,6 @@
 <?php require '../config/db.php'; ?>
+<?php require '../config/auth.php'; ?>
+<?php require_login(); ?>
 <?php $tinymceKey = getenv('TINYMCE_API_KEY'); ?>
 <!DOCTYPE html>
 <html lang="fr">
