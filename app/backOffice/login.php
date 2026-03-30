@@ -45,57 +45,80 @@ $next = $_GET['next'] ?? '/?page=dashboard';
     <meta name="description" content="Connexion au backoffice - Le Monde">
     <title>Connexion - Backoffice</title>
     <link rel="stylesheet" href="/css/backoffice.css">
+    <style>
+        /* Skip link for accessibility */
+        .skip-link {
+            position: absolute;
+            top: -40px;
+            left: 0;
+            background: #1a1a1a;
+            color: white;
+            padding: 8px;
+            z-index: 100;
+            text-decoration: none;
+        }
+        .skip-link:focus {
+            top: 0;
+        }
+    </style>
 </head>
 <body>
 
-<div class="login-container">
-    <div class="login-card">
-        <!-- Header -->
-        <div class="login-header">
-            <h1 class="logo-title">Le Monde</h1>
-            <span class="logo-subtitle">Administration</span>
+<!-- Skip to main content link for accessibility -->
+<a href="#main-content" class="skip-link">Aller au contenu principal</a>
+
+<main id="main-content">
+    <div class="login-container">
+        <div class="login-card">
+            <!-- Header -->
+            <header class="login-header">
+                <h1 class="logo-title">Le Monde</h1>
+                <span class="logo-subtitle">Administration</span>
+            </header>
+
+            <!-- Error Message -->
+            <?php if ($error): ?>
+                <div class="login-error" role="alert" aria-live="polite">
+                    <?= escape($error) ?>
+                </div>
+            <?php endif; ?>
+
+            <!-- Login Form -->
+            <form method="POST" action="/?page=login" class="login-form">
+                <input type="hidden" name="next" value="<?= escape($next) ?>">
+
+                <div class="login-form-group">
+                    <label for="username">Nom d'utilisateur</label>
+                    <input 
+                        type="text" 
+                        id="username" 
+                        name="username" 
+                        value="admin"
+                        required 
+                        autofocus
+                        autocomplete="username"
+                        aria-label="Nom d'utilisateur"
+                    >
+                </div>
+
+                <div class="login-form-group">
+                    <label for="password">Mot de passe</label>
+                    <input 
+                        type="password" 
+                        id="password" 
+                        name="password" 
+                        value="admin123"
+                        required
+                        autocomplete="current-password"
+                        aria-label="Mot de passe"
+                    >
+                </div>
+
+                <button type="submit" class="login-submit">Se connecter</button>
+            </form>
         </div>
-
-        <!-- Error Message -->
-        <?php if ($error): ?>
-            <div class="login-error">
-                <?= escape($error) ?>
-            </div>
-        <?php endif; ?>
-
-        <!-- Login Form -->
-        <form method="POST" action="/?page=login" class="login-form">
-            <input type="hidden" name="next" value="<?= escape($next) ?>">
-
-            <div class="login-form-group">
-                <label for="username">Nom d'utilisateur</label>
-                <input 
-                    type="text" 
-                    id="username" 
-                    name="username" 
-                    value="admin"
-                    required 
-                    autofocus
-                    autocomplete="username"
-                >
-            </div>
-
-            <div class="login-form-group">
-                <label for="password">Mot de passe</label>
-                <input 
-                    type="password" 
-                    id="password" 
-                    name="password" 
-                    value="admin123"
-                    required
-                    autocomplete="current-password"
-                >
-            </div>
-
-            <button type="submit" class="login-submit">Se connecter</button>
-        </form>
     </div>
-</div>
+</main>
 
 </body>
 </html>

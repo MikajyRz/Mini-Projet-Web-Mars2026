@@ -114,4 +114,4 @@ require '../frontOffice/header.php';
     <p>Aucun article disponible pour le moment.</p>
 <?php endif; ?>
 
-<?php require '../frontOffice/footer.php'; ?>
+<?php require '../frontOffice/footer.php'; ?>
