@@ -1,0 +1,50 @@
+# Système et OS
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+
+# Éditeurs
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+.editorconfig
+
+# PHP
+vendor/
+.env
+.env.local
+.env.*.local
+composer.lock
+*.log
+
+# Cache PHP
+/tmp/
+/cache/
+*.cache
+
+# Fichiers de configuration sensibles
+config/*.local.php
+config/*.dev.php
+
+# Docker
+.dockerignore
+
+# Base de données locale
+*.db
+
+# Fichiers temporaires
+*.tmp
+tmp/
+temp/
+
+# OS Windows
+.DS_Store
+desktop.ini
+
+# Autres
+.git/
+.gitkeep
+.xlsx
