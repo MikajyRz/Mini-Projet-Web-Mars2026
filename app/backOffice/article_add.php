@@ -1,26 +1,37 @@
 <?php require '../config/db.php'; ?>
 <?php $tinymceKey = getenv('TINYMCE_API_KEY'); ?>
 <!DOCTYPE html>
-<html>
+<html lang="fr">
 <head>
-    <title>Ajouter article</title>
-    <style>
-        form { max-width: 800px; margin: 20px auto; }
-        .form-group { margin-bottom: 15px; }
-        label { display: block; margin-bottom: 5px; font-weight: bold; }
-        input[type="text"], input[type="file"], select, textarea { width: 100%; padding: 8px; border: 1px solid #ddd; }
-        button { padding: 10px 20px; background: #007bff; color: white; border: none; cursor: pointer; }
-        button:hover { background: #0056b3; }
-    </style>
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ajouter article - Le Monde Backoffice</title>
+    <link rel="stylesheet" href="/css/backoffice.css">
     <script src="https://cdn.tiny.cloud/1/<?= $tinymceKey ?>/tinymce/6/tinymce.min.js"></script>
 </head>
 
 <body>
 
-<h1>Ajouter un article</h1>
+<div class="bo-layout">
+    <aside class="bo-sidebar">
+        <div class="bo-logo">
+            <h2>Le Monde <span>Admin</span></h2>
+        </div>
+        <nav class="bo-nav">
+            <a href="/?page=dashboard"><svg class="svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="3" y1="9" x2="21" y2="9"></line><line x1="9" y1="21" x2="9" y2="9"></line></svg> Dashboard</a>
+            <a href="/?page=add" class="active"><svg class="svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg> Nouvel Article</a>
+            <a href="/?page=home" target="_blank"><svg class="svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg> Voir le site</a>
+        </nav>
+    </aside>
 
-<form id="articleForm" action="/?page=save" method="POST" enctype="multipart/form-data">
+    <main class="bo-main">
+        <header class="bo-header">
+            <h1>Ajouter un article</h1>
+        </header>
+
+        <div class="bo-content">
+            <div class="form-card">
+                <form id="articleForm" action="/?page=save" method="POST" enctype="multipart/form-data">
     <div class="form-group">
         <label for="titre">Titre</label>
         <input type="text" id="titre" name="titre" placeholder="Titre de l'article" required>
@@ -29,11 +40,6 @@
     <div class="form-group">
         <label for="chapeau">Résumé (Chapeau)</label>
         <textarea id="chapeau" name="chapeau" rows="3" placeholder="Résumé de l'article pour meta description" required></textarea>
-    </div>
-
-    <div class="form-group">
-        <label for="corps">Contenu</label>
-        <textarea id="corps" name="corps"></textarea>
     </div>
 
     <div class="form-group">
@@ -63,8 +69,17 @@
         <input type="text" id="meta_title" name="meta_title" placeholder="Titre pour les moteurs de recherche">
     </div>
 
-    <button type="submit">Publier l'article</button>
-</form>
+    <div class="form-group">
+        <label for="corps">Contenu</label>
+        <textarea id="corps" name="corps"></textarea>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Publier l'article</button>
+                </form>
+            </div>
+        </div>
+    </main>
+</div>
 
 <script>
 tinymce.init({
