@@ -14,5 +14,10 @@ switch ($page) {
     case 'delete': require '../backOffice/article_delete.php'; break;
     case 'save': require '../backOffice/save_article.php'; break;
     case 'upload': require '../backOffice/upload.php'; break;
+    case 'categories': require '../backOffice/category_list.php'; break;
+    case 'category_add': require '../backOffice/category_add.php'; break;
+    case 'category_edit': require '../backOffice/category_edit.php'; break;
+    case 'category_delete': require '../backOffice/category_delete.php'; break;
+    case 'save_category': require '../backOffice/save_category.php'; break;
     default: echo "<h1>404 - Page non trouvée</h1>";
 }
