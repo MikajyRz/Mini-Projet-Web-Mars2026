@@ -11,6 +11,10 @@ $stmt = $pdo->prepare("SELECT * FROM articles WHERE id = :id");
 $stmt->execute(['id' => $id]);
 $article = $stmt->fetch();
 $tinymceKey = getenv('TINYMCE_API_KEY');
+
+// Charger les catégories depuis la base de données
+$stmt = $pdo->query("SELECT id, name FROM categories ORDER BY name");
+$categories = $stmt->fetchAll();
 ?>
 
 <!DOCTYPE html>
@@ -35,6 +39,7 @@ $tinymceKey = getenv('TINYMCE_API_KEY');
         <nav class="bo-nav">
             <a href="/?page=dashboard"><svg class="svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="3" y1="9" x2="21" y2="9"></line><line x1="9" y1="21" x2="9" y2="9"></line></svg> Dashboard</a>
             <a href="/?page=add"><svg class="svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg> Nouvel Article</a>
+            <a href="/?page=categories"><svg class="svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg> Catégories</a>
             <a href="/?page=home" target="_blank"><svg class="svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg> Voir le site</a>
         </nav>
     </aside>
@@ -73,11 +78,9 @@ $tinymceKey = getenv('TINYMCE_API_KEY');
     <div class="form-group">
         <label for="category_id">Catégorie</label>
         <select id="category_id" name="category_id" required>
-            <option value="1" <?= $article['category_id'] == 1 ? 'selected' : '' ?>>International</option>
-            <option value="2" <?= $article['category_id'] == 2 ? 'selected' : '' ?>>Politique</option>
-            <option value="3" <?= $article['category_id'] == 3 ? 'selected' : '' ?>>Économie</option>
-            <option value="4" <?= $article['category_id'] == 4 ? 'selected' : '' ?>>Culture</option>
-            <option value="5" <?= $article['category_id'] == 5 ? 'selected' : '' ?>>Sports</option>
+            <?php foreach ($categories as $cat): ?>
+            <option value="<?= $cat['id'] ?>" <?= $article['category_id'] == $cat['id'] ? 'selected' : '' ?>><?= escape($cat['name']) ?></option>
+            <?php endforeach; ?>
         </select>
     </div>
 
