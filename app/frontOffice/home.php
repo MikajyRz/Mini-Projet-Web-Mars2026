@@ -13,7 +13,7 @@ $sql = "
 
 if ($categoryFilter) {
     $sql .= " WHERE LOWER(c.name) = :category";
-    $params['category'] = strtolower($categoryFilter);
+    $params['category'] = mb_strtolower($categoryFilter, 'UTF-8');
 }
 
 $sql .= " ORDER BY a.created_at DESC";
