@@ -97,44 +97,38 @@ $categories = $stmt->fetchAll();
     <button type="submit" class="btn btn-primary">Modifier l'article</button>
                 </form>
             </div>
-        </div>
-    </main>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/tinymce@6.8.2/tinymce.min.js"></script>
 <script>
-window.addEventListener('load', function() {
-    setTimeout(function() {
-        var script = document.createElement('script');
-        script.src = "https://cdn.jsdelivr.net/npm/tinymce@6.8.2/tinymce.min.js";
-        script.onload = function() {
-            tinymce.init({
-                selector: 'textarea#corps',
-                height: 400,
-                plugins: 'image link lists',
-                elementpath: false, /* Fix Accessibilité ARIA */
-                images_upload_url: '/?page=upload',
-                automatic_uploads: true,
-                file_picker_types: 'image',
-                setup: function(editor) {
-                    // Synchroniser avant soumission
-                    document.getElementById('articleForm').addEventListener('submit', function(e) {
-                        const activeEditor = tinymce.get('corps');
-                        const plainText = (activeEditor ? activeEditor.getContent({ format: 'text' }) : '').trim();
-                        if (!plainText) {
-                            e.preventDefault();
-                            alert('Le contenu de l\'article est obligatoire.');
-                            if (activeEditor) {
-                                activeEditor.focus();
-                            }
-                            return;
-                        }
-                        tinymce.triggerSave();
-                    });
+document.addEventListener('DOMContentLoaded', function() {
+    tinymce.init({
+        selector: 'textarea#corps',
+        height: 400,
+        plugins: 'image link lists code',
+        toolbar: 'undo redo | formatselect | bold italic | alignleft aligncenter alignright | bullist numlist | image link | code',
+        elementpath: false,
+        images_upload_url: '/?page=upload',
+        automatic_uploads: true,
+        file_picker_types: 'image',
+        promotion: false,
+        branding: false,
+        setup: function(editor) {
+            document.getElementById('articleForm').addEventListener('submit', function(e) {
+                const activeEditor = tinymce.get('corps');
+                const plainText = (activeEditor ? activeEditor.getContent({ format: 'text' }) : '').trim();
+                if (!plainText) {
+                    e.preventDefault();
+                    alert('Le contenu de l\'article est obligatoire.');
+                    if (activeEditor) {
+                        activeEditor.focus();
+                    }
+                    return;
                 }
+                tinymce.triggerSave();
             });
-        };
-        document.body.appendChild(script);
-    }, 500); // Diffère le chargement CPU de Lighthouse
+        }
+    });
 });
 </script>
 
