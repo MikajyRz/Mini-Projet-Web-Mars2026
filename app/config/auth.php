@@ -13,8 +13,8 @@ function is_logged_in(): bool {
 
 function require_login(): void {
     if (!is_logged_in()) {
-        $next = $_SERVER['REQUEST_URI'] ?? '/?page=dashboard';
-        header('Location: /?page=login&next=' . urlencode($next));
+        $next = $_SERVER['REQUEST_URI'] ?? '/dashboard';
+        header('Location: /login?next=' . urlencode($next));
         exit;
     }
 }

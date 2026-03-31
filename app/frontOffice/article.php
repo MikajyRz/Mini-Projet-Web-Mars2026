@@ -26,7 +26,7 @@ $suggestedStmt = $pdo->prepare("
     LEFT JOIN categories c ON a.category_id = c.id 
     WHERE a.category_id = :category_id AND a.id != :current_id 
     ORDER BY a.created_at DESC 
-    LIMIT 3
+    LIMIT 6
 ");
 $suggestedStmt->execute([
     'category_id' => $a['category_id'],
@@ -51,7 +51,7 @@ require '../frontOffice/header.php';
 ?>
 
 <div class="article-detail-page">
-    <!-- Contenu Principal (À GAUCHE) -->
+    <!-- Contenu Principal (PLEINE LARGEUR) -->
     <article class="article-detail">
         <header class="article-detail-header">
             <?php if (!empty($a['category_name'])): ?>
@@ -66,43 +66,51 @@ require '../frontOffice/header.php';
         </header>
 
         <?php if (!empty($a['image_principale'])): ?>
-        <img class="article-detail-image" src="/uploads/<?= escape($a['image_principale']) ?>" alt="<?= escape($a['image_alt'] ?? $a['titre']) ?>">
+        <img class="article-detail-image" 
+             src="/uploads/<?= escape($a['image_principale']) ?>" 
+             alt="<?= escape(!empty($a['image_alt']) ? $a['image_alt'] : $a['titre']) ?>"
+             fetchpriority="high">
         <?php endif; ?>
 
         <div class="article-detail-content">
             <?= $a['corps'] ?>
         </div>
     </article>
-
-    <!-- Sidebar (À DROITE) - Suggestions de la même catégorie -->
-    <aside class="articles-sidebar">
-        <div class="section-title">Dans la même rubrique</div>
-        <?php if (count($suggestedArticles) > 0): ?>
-            <?php foreach ($suggestedArticles as $suggested): ?>
-                <article class="article-card article-sidebar-item">
-                    <div class="sidebar-inner">
-                        <?php if (!empty($suggested['image_principale'])): ?>
-                            <div class="sidebar-image-wrap">
-                                <a href="?page=article&slug=<?= $suggested['slug'] ?>">
-                                    <img class="article-image" src="/uploads/<?= escape($suggested['image_principale']) ?>" alt="<?= escape($suggested['image_alt'] ?? $suggested['titre']) ?>">
-                                </a>
-                            </div>
-                        <?php endif; ?>
-                        <div class="sidebar-text">
-                            <h4 class="article-title">
-                                <a href="?page=article&slug=<?= $suggested['slug'] ?>">
-                                    <?= escape($suggested['titre']) ?>
-                                </a>
-                            </h4>
-                            <p class="article-date">Le <?= date('d/m/Y', strtotime($suggested['created_at'])) ?></p>
-                        </div>
-                    </div>
-                </article>
-            <?php endforeach; ?>
-        <?php else: ?>
-            <p class="no-articles">Aucun autre article dans cette rubrique.</p>
-        <?php endif; ?>
-    </aside>
 </div>
+
+<!-- Section "Dans la même rubrique" en bas, pleine largeur -->
+<?php if (count($suggestedArticles) > 0): ?>
+<section class="related-section">
+    <div class="section-title">Dans la même rubrique</div>
+    <div class="related-grid">
+        <?php foreach ($suggestedArticles as $suggested): ?>
+            <article class="related-card">
+                <?php if (!empty($suggested['image_principale'])): ?>
+                    <a href="<?= article_url($suggested) ?>" class="related-card__image-link" aria-label="Lire l'article : <?= escape($suggested['titre']) ?>" tabindex="-1">
+                        <div class="related-card__image-wrap">
+                            <img class="related-card__image" 
+                                 src="/uploads/<?= escape($suggested['image_principale']) ?>" 
+                                 alt="<?= escape(!empty($suggested['image_alt']) ? $suggested['image_alt'] : $suggested['titre']) ?>"
+                                 loading="lazy" 
+                                 decoding="async">
+                        </div>
+                    </a>
+                <?php endif; ?>
+                <div class="related-card__body">
+                    <?php if (!empty($suggested['category_name'])): ?>
+                        <span class="category-label"><?= escape($suggested['category_name']) ?></span>
+                    <?php endif; ?>
+                    <h3 class="related-card__title">
+                        <a href="<?= article_url($suggested) ?>">
+                            <?= escape($suggested['titre']) ?>
+                        </a>
+                    </h3>
+                    <p class="related-card__date">Le <?= date('d/m/Y', strtotime($suggested['created_at'])) ?></p>
+                </div>
+            </article>
+        <?php endforeach; ?>
+    </div>
+</section>
+<?php endif; ?>
 
 <?php require '../frontOffice/footer.php'; ?>

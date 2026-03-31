@@ -42,7 +42,7 @@ $categories = $stmt->fetchAll();
 
         <div class="bo-content">
             <div class="form-card">
-                <form id="articleForm" action="/?page=save" method="POST" enctype="multipart/form-data">
+                <form id="articleForm" action="/save" method="POST" enctype="multipart/form-data">
     <div class="form-group">
         <label for="titre">Titre</label>
         <input type="text" id="titre" name="titre" placeholder="Titre de l'article" required>

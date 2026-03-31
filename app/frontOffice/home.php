@@ -2,18 +2,31 @@
 require '../config/db.php';
 require '../config/utils.php';
 
-$articles = $pdo->query("
+$categoryFilter = $_GET['category'] ?? null;
+$params = [];
+
+$sql = "
     SELECT a.*, c.name as category_name 
     FROM articles a 
-    LEFT JOIN categories c ON a.category_id = c.id 
-    ORDER BY a.created_at DESC
-")->fetchAll();
+    LEFT JOIN categories c ON a.category_id = c.id
+";
 
-$pageTitle = 'Actualités en direct';
+if ($categoryFilter) {
+    $sql .= " WHERE LOWER(c.name) = :category";
+    $params['category'] = mb_strtolower($categoryFilter, 'UTF-8');
+}
+
+$sql .= " ORDER BY a.created_at DESC";
+
+$stmt = $pdo->prepare($sql);
+$stmt->execute($params);
+$articles = $stmt->fetchAll();
+
+$pageTitle = $categoryFilter ? 'Rubrique ' . ucfirst($categoryFilter) : 'Actualités en direct';
 require '../frontOffice/header.php';
 ?>
 
-<div class="section-title">Actualités en Continu</div>
+<h1 class="section-title"><?= $categoryFilter ? 'Rubrique : ' . escape(ucfirst($categoryFilter)) : 'Actualités en Continu' ?></h1>
 
 <?php if (count($articles) > 0): ?>
     <?php 
@@ -29,8 +42,11 @@ require '../frontOffice/header.php';
             <?php foreach ($heroArticles as $hero): ?>
                 <article class="article-hero">
                     <?php if (!empty($hero['image_principale'])): ?>
-                        <a href="?page=article&slug=<?= $hero['slug'] ?>">
-                            <img class="article-image" src="/uploads/<?= escape($hero['image_principale']) ?>" alt="<?= escape($hero['image_alt'] ?? $hero['titre']) ?>">
+                        <a href="<?= article_url($hero) ?>" aria-label="Lire l'article : <?= escape($hero['titre']) ?>" tabindex="-1">
+                            <img class="article-image" 
+                                 src="/uploads/<?= escape($hero['image_principale']) ?>" 
+                                 alt="<?= escape(!empty($hero['image_alt']) ? $hero['image_alt'] : $hero['titre']) ?>"
+                                 fetchpriority="high">
                         </a>
                     <?php endif; ?>
                     
@@ -42,7 +58,7 @@ require '../frontOffice/header.php';
                     </div>
                     
                     <h2 class="article-title">
-                        <a href="?page=article&slug=<?= $hero['slug'] ?>">
+                        <a href="<?= article_url($hero) ?>">
                             <?= escape($hero['titre']) ?>
                         </a>
                     </h2>
@@ -59,8 +75,12 @@ require '../frontOffice/header.php';
             <?php foreach ($sidebarArticles as $a): ?>
                 <article class="article-card article-sidebar-item">
                     <?php if (!empty($a['image_principale'])): ?>
-                        <a href="?page=article&slug=<?= $a['slug'] ?>">
-                            <img class="article-image" src="/uploads/<?= escape($a['image_principale']) ?>" alt="<?= escape($a['image_alt'] ?? $a['titre']) ?>">
+                        <a href="<?= article_url($a) ?>" aria-label="Lire l'article : <?= escape($a['titre']) ?>" tabindex="-1">
+                            <img class="article-image" 
+                                 src="/uploads/<?= escape($a['image_principale']) ?>" 
+                                 alt="<?= escape(!empty($a['image_alt']) ? $a['image_alt'] : $a['titre']) ?>"
+                                 loading="lazy" 
+                                 decoding="async">
                         </a>
                     <?php endif; ?>
                     
@@ -72,7 +92,7 @@ require '../frontOffice/header.php';
                     </div>
 
                     <h3 class="article-title" style="font-size: 1.2rem; margin-top: 0.3rem;">
-                        <a href="?page=article&slug=<?= $a['slug'] ?>">
+                        <a href="<?= article_url($a) ?>">
                             <?= escape($a['titre']) ?>
                         </a>
                     </h3>
@@ -88,24 +108,26 @@ require '../frontOffice/header.php';
             <?php foreach ($remainingArticles as $a): ?>
                 <article class="article-card bottom-grid-item">
                     <?php if (!empty($a['image_principale'])): ?>
-                        <a href="?page=article&slug=<?= $a['slug'] ?>">
-                            <img class="article-image" src="/uploads/<?= escape($a['image_principale']) ?>" alt="<?= escape($a['image_alt'] ?? $a['titre']) ?>">
-                        </a>
+                        <div class="image-frame">
+                            <a href="<?= article_url($a) ?>" aria-label="Lire l'article : <?= escape($a['titre']) ?>" tabindex="-1">
+                                <img class="article-image" 
+                                     src="/uploads/<?= escape($a['image_principale']) ?>" 
+                                     alt="<?= escape(!empty($a['image_alt']) ? $a['image_alt'] : $a['titre']) ?>"
+                                     loading="lazy"
+                                     decoding="async">
+                            </a>
+                        </div>
                     <?php endif; ?>
                     
-                    <div class="article-header-meta" style="margin-top: 0.5rem;">
-                        <?php if (!empty($a['category_name'])): ?>
-                            <span class="category-label"><?= escape($a['category_name']) ?></span>
-                        <?php endif; ?>
-                        <span class="article-date" style="font-size: 0.8rem; color: var(--text-muted); display: block;">Publié le <?= date('d/m/Y', strtotime($a['created_at'])) ?></span>
+                    <div class="article-text-content">
+                        <span class="article-date">Le <?= date('d/m/Y', strtotime($a['created_at'])) ?></span>
+                        
+                        <h4 class="article-title">
+                            <a href="<?= article_url($a) ?>">
+                                <?= escape($a['titre']) ?>
+                            </a>
+                        </h4>
                     </div>
-
-                    <h3 class="article-title">
-                        <a href="?page=article&slug=<?= $a['slug'] ?>">
-                            <?= escape($a['titre']) ?>
-                        </a>
-                    </h3>
-                    <p class="article-excerpt" style="font-size: 0.9rem;"><?= mb_strimwidth(strip_tags($a['corps']), 0, 150, "...") ?></p>
                 </article>
             <?php endforeach; ?>
         </div>
@@ -114,4 +136,4 @@ require '../frontOffice/header.php';
     <p>Aucun article disponible pour le moment.</p>
 <?php endif; ?>
 
-<?php require '../frontOffice/footer.php'; ?>
+<?php require '../frontOffice/footer.php'; ?>

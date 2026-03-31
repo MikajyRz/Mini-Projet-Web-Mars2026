@@ -1,6 +1,7 @@
 <?php
 // Endpoint pour l'upload d'images TinyMCE
 
+require '../config/utils.php';
 require '../config/auth.php';
 
 require_login();
@@ -44,19 +45,31 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_FILES['file'])) {
     }
     
     // Générer un nom unique
-    $new_file_name = uniqid() . '_' . time() . '.' . $file_ext;
-    $file_path = $upload_dir . $new_file_name;
+    $new_file_name_base = uniqid() . '_' . time();
+    $new_file_name_webp = $new_file_name_base . '.webp';
+    $file_path_webp = $upload_dir . $new_file_name_webp;
     
-    if (move_uploaded_file($file_tmp, $file_path)) {
-        // TinyMCE attend une réponse JSON avec location
+    // Tenter la conversion WebP (max 800px et qualité 70)
+    if (convert_and_resize_to_webp($file_tmp, $file_path_webp, 800, 70)) {
         echo json_encode([
-            'location' => $public_base_url . $new_file_name
+            'location' => $public_base_url . $new_file_name_webp
         ]);
         exit;
     } else {
-        http_response_code(500);
-        echo json_encode(['error' => 'Erreur serveur']);
-        exit;
+        // Fallback: upload normal
+        $new_file_name = $new_file_name_base . '.' . $file_ext;
+        $file_path = $upload_dir . $new_file_name;
+        
+        if (move_uploaded_file($file_tmp, $file_path)) {
+            echo json_encode([
+                'location' => $public_base_url . $new_file_name
+            ]);
+            exit;
+        } else {
+            http_response_code(500);
+            echo json_encode(['error' => 'Erreur serveur']);
+            exit;
+        }
     }
 } else {
     http_response_code(400);
