@@ -57,8 +57,8 @@ if (isset($_FILES['image_principale']) && $_FILES['image_principale']['size'] > 
         $new_file_name_webp = $new_file_name_base . '.webp';
         $file_path_webp = $upload_dir . $new_file_name_webp;
         
-        // Tenter la conversion WebP (max 1200px largeur)
-        if (convert_and_resize_to_webp($file_tmp, $file_path_webp, 1200, 80)) {
+        // Tenter la conversion WebP (max 800px largeur, qualité 70 pour Mobile Performance 100/100)
+        if (convert_and_resize_to_webp($file_tmp, $file_path_webp, 800, 70)) {
             $image_principale = $new_file_name_webp;
         } else {
             // Fallback (ex: format non supporté par GD)

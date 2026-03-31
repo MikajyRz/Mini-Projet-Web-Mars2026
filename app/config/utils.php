@@ -11,6 +11,10 @@ function escape($text) {
  * Convertit et redimensionne une image en WebP pour la performance optimale
  */
 function convert_and_resize_to_webp($source_file, $destination_file, $max_width = 1200, $quality = 80) {
+    if (!function_exists('imagecreatetruecolor')) {
+        return false;
+    }
+
     $info = getimagesize($source_file);
     if (!$info) return false;
 

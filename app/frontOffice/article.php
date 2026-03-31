@@ -68,7 +68,7 @@ require '../frontOffice/header.php';
         <?php if (!empty($a['image_principale'])): ?>
         <img class="article-detail-image" 
              src="/uploads/<?= escape($a['image_principale']) ?>" 
-             alt="<?= escape($a['image_alt'] ?? $a['titre']) ?>"
+             alt="<?= escape(!empty($a['image_alt']) ? $a['image_alt'] : $a['titre']) ?>"
              fetchpriority="high">
         <?php endif; ?>
 

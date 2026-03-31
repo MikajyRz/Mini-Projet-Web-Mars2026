@@ -49,8 +49,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_FILES['file'])) {
     $new_file_name_webp = $new_file_name_base . '.webp';
     $file_path_webp = $upload_dir . $new_file_name_webp;
     
-    // Tenter la conversion WebP
-    if (convert_and_resize_to_webp($file_tmp, $file_path_webp, 1200, 80)) {
+    // Tenter la conversion WebP (max 800px et qualité 70)
+    if (convert_and_resize_to_webp($file_tmp, $file_path_webp, 800, 70)) {
         echo json_encode([
             'location' => $public_base_url . $new_file_name_webp
         ]);

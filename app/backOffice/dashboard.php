@@ -22,6 +22,7 @@ $categories = [
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Tableau de bord de gestion des articles du journal Le Monde. Interface d'administration sécurisée.">
     <title>Dashboard - Le Monde Backoffice</title>
     <link rel="stylesheet" href="/css/backoffice.css">
 </head>

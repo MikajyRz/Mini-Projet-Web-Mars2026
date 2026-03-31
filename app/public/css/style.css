@@ -433,11 +433,12 @@ a:hover {
 
 .article-detail-image {
   width: 100%;
-  height: auto;
-  max-height: none; /* Ne pas recadrer l'image principale */
-  object-fit: contain;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  border-radius: 4px; /* Adoucir les bords comme sur l'accueil */
   margin-bottom: 2.5rem;
   box-shadow: 0 10px 30px rgba(0,0,0,0.05); /* Effet pro */
+  display: block;
 }
 
 .article-detail-content {
