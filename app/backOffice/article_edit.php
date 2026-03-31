@@ -11,6 +11,10 @@ $stmt = $pdo->prepare("SELECT * FROM articles WHERE id = :id");
 $stmt->execute(['id' => $id]);
 $article = $stmt->fetch();
 $tinymceKey = getenv('TINYMCE_API_KEY');
+
+// Charger les catégories depuis la base de données
+$stmt = $pdo->query("SELECT id, name FROM categories ORDER BY name");
+$categories = $stmt->fetchAll();
 ?>
 
 <!DOCTYPE html>
@@ -33,9 +37,10 @@ $tinymceKey = getenv('TINYMCE_API_KEY');
             <h2>Le Monde <span>Admin</span></h2>
         </div>
         <nav class="bo-nav">
-            <a href="/dashboard"><svg class="svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="3" y1="9" x2="21" y2="9"></line><line x1="9" y1="21" x2="9" y2="9"></line></svg> Dashboard</a>
-            <a href="/add"><svg class="svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg> Nouvel Article</a>
-            <a href="/" target="_blank"><svg class="svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg> Voir le site</a>
+            <a href="/?page=dashboard"><svg class="svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="3" y1="9" x2="21" y2="9"></line><line x1="9" y1="21" x2="9" y2="9"></line></svg> Dashboard</a>
+            <a href="/?page=add"><svg class="svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg> Nouvel Article</a>
+            <a href="/?page=categories"><svg class="svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg> Catégories</a>
+            <a href="/?page=home" target="_blank"><svg class="svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg> Voir le site</a>
         </nav>
     </aside>
 
@@ -73,11 +78,9 @@ $tinymceKey = getenv('TINYMCE_API_KEY');
     <div class="form-group">
         <label for="category_id">Catégorie</label>
         <select id="category_id" name="category_id" required>
-            <option value="1" <?= $article['category_id'] == 1 ? 'selected' : '' ?>>International</option>
-            <option value="2" <?= $article['category_id'] == 2 ? 'selected' : '' ?>>Politique</option>
-            <option value="3" <?= $article['category_id'] == 3 ? 'selected' : '' ?>>Économie</option>
-            <option value="4" <?= $article['category_id'] == 4 ? 'selected' : '' ?>>Culture</option>
-            <option value="5" <?= $article['category_id'] == 5 ? 'selected' : '' ?>>Sports</option>
+            <?php foreach ($categories as $cat): ?>
+            <option value="<?= $cat['id'] ?>" <?= $article['category_id'] == $cat['id'] ? 'selected' : '' ?>><?= escape($cat['name']) ?></option>
+            <?php endforeach; ?>
         </select>
     </div>
 
@@ -94,44 +97,38 @@ $tinymceKey = getenv('TINYMCE_API_KEY');
     <button type="submit" class="btn btn-primary">Modifier l'article</button>
                 </form>
             </div>
-        </div>
-    </main>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/tinymce@6.8.2/tinymce.min.js"></script>
 <script>
-window.addEventListener('load', function() {
-    setTimeout(function() {
-        var script = document.createElement('script');
-        script.src = "https://cdn.jsdelivr.net/npm/tinymce@6.8.2/tinymce.min.js";
-        script.onload = function() {
-            tinymce.init({
-                selector: 'textarea#corps',
-                height: 400,
-                plugins: 'image link lists',
-                elementpath: false, /* Fix Accessibilité ARIA */
-                images_upload_url: '/upload',
-                automatic_uploads: true,
-                file_picker_types: 'image',
-                setup: function(editor) {
-                    // Synchroniser avant soumission
-                    document.getElementById('articleForm').addEventListener('submit', function(e) {
-                        const activeEditor = tinymce.get('corps');
-                        const plainText = (activeEditor ? activeEditor.getContent({ format: 'text' }) : '').trim();
-                        if (!plainText) {
-                            e.preventDefault();
-                            alert('Le contenu de l\'article est obligatoire.');
-                            if (activeEditor) {
-                                activeEditor.focus();
-                            }
-                            return;
-                        }
-                        tinymce.triggerSave();
-                    });
+document.addEventListener('DOMContentLoaded', function() {
+    tinymce.init({
+        selector: 'textarea#corps',
+        height: 400,
+        plugins: 'image link lists code',
+        toolbar: 'undo redo | formatselect | bold italic | alignleft aligncenter alignright | bullist numlist | image link | code',
+        elementpath: false,
+        images_upload_url: '/?page=upload',
+        automatic_uploads: true,
+        file_picker_types: 'image',
+        promotion: false,
+        branding: false,
+        setup: function(editor) {
+            document.getElementById('articleForm').addEventListener('submit', function(e) {
+                const activeEditor = tinymce.get('corps');
+                const plainText = (activeEditor ? activeEditor.getContent({ format: 'text' }) : '').trim();
+                if (!plainText) {
+                    e.preventDefault();
+                    alert('Le contenu de l\'article est obligatoire.');
+                    if (activeEditor) {
+                        activeEditor.focus();
+                    }
+                    return;
                 }
+                tinymce.triggerSave();
             });
-        };
-        document.body.appendChild(script);
-    }, 500); // Diffère le chargement CPU de Lighthouse
+        }
+    });
 });
 </script>
 
