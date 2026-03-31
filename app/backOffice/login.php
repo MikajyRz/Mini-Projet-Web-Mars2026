@@ -6,7 +6,7 @@ require '../config/auth.php';
 ensure_session_started();
 
 if (is_logged_in()) {
-    $next = $_GET['next'] ?? '/?page=dashboard';
+    $next = $_GET['next'] ?? '/dashboard';
     header('Location: ' . $next);
     exit;
 }
@@ -16,7 +16,7 @@ $error = null;
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $username = trim($_POST['username'] ?? '');
     $password = $_POST['password'] ?? '';
-    $next = $_POST['next'] ?? '/?page=dashboard';
+    $next = $_POST['next'] ?? '/dashboard';
 
     if ($username === '' || $password === '') {
         $error = "Nom d'utilisateur et mot de passe requis.";
@@ -35,7 +35,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-$next = $_GET['next'] ?? '/?page=dashboard';
+$next = $_GET['next'] ?? '/dashboard';
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -64,7 +64,7 @@ $next = $_GET['next'] ?? '/?page=dashboard';
         <?php endif; ?>
 
         <!-- Login Form -->
-        <form method="POST" action="/?page=login" class="login-form">
+        <form method="POST" action="/login" class="login-form">
             <input type="hidden" name="next" value="<?= escape($next) ?>">
 
             <div class="login-form-group">

@@ -8,6 +8,26 @@ function escape($text) {
 }
 
 /**
+ * Génère l'URL propre (rewritée) d'un article
+ * Format : /{categorie}/article/{date}/{slug}
+ * Exemple : /economie/article/2026-03-31/conflit-en-iran-situation-actuelle
+ */
+function article_url($article) {
+    $category = mb_strtolower($article['category_name'] ?? 'international', 'UTF-8');
+    $date = date('Y-m-d', strtotime($article['created_at']));
+    $slug = $article['slug'];
+    return '/' . urlencode($category) . '/article/' . $date . '/' . $slug;
+}
+
+/**
+ * Génère l'URL propre d'une catégorie
+ * Format : /{categorie}
+ */
+function category_url($categoryName) {
+    return '/' . urlencode(mb_strtolower($categoryName, 'UTF-8'));
+}
+
+/**
  * Convertit et redimensionne une image en WebP pour la performance optimale
  */
 function convert_and_resize_to_webp($source_file, $destination_file, $max_width = 1200, $quality = 80) {

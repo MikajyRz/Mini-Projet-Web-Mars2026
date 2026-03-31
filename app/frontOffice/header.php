@@ -34,7 +34,7 @@
             $categories_nav = $pdo->query("SELECT * FROM categories ORDER BY name ASC")->fetchAll();
             foreach ($categories_nav as $cat): 
             ?>
-                <a href="/?category=<?= urlencode(mb_strtolower($cat['name'], 'UTF-8')) ?>"><?= escape($cat['name']) ?></a>
+                <a href="<?= category_url($cat['name']) ?>"><?= escape($cat['name']) ?></a>
             <?php endforeach; ?>
         </nav>
         <a href="/login" class="login-btn" aria-label="Espace personnel / Se connecter">

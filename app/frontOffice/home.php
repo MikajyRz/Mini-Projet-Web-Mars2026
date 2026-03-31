@@ -42,7 +42,7 @@ require '../frontOffice/header.php';
             <?php foreach ($heroArticles as $hero): ?>
                 <article class="article-hero">
                     <?php if (!empty($hero['image_principale'])): ?>
-                        <a href="?page=article&slug=<?= $hero['slug'] ?>" aria-label="Lire l'article : <?= escape($hero['titre']) ?>" tabindex="-1">
+                        <a href="<?= article_url($hero) ?>" aria-label="Lire l'article : <?= escape($hero['titre']) ?>" tabindex="-1">
                             <img class="article-image" 
                                  src="/uploads/<?= escape($hero['image_principale']) ?>" 
                                  alt="<?= escape(!empty($hero['image_alt']) ? $hero['image_alt'] : $hero['titre']) ?>"
@@ -58,7 +58,7 @@ require '../frontOffice/header.php';
                     </div>
                     
                     <h2 class="article-title">
-                        <a href="?page=article&slug=<?= $hero['slug'] ?>">
+                        <a href="<?= article_url($hero) ?>">
                             <?= escape($hero['titre']) ?>
                         </a>
                     </h2>
@@ -75,7 +75,7 @@ require '../frontOffice/header.php';
             <?php foreach ($sidebarArticles as $a): ?>
                 <article class="article-card article-sidebar-item">
                     <?php if (!empty($a['image_principale'])): ?>
-                        <a href="?page=article&slug=<?= $a['slug'] ?>" aria-label="Lire l'article : <?= escape($a['titre']) ?>" tabindex="-1">
+                        <a href="<?= article_url($a) ?>" aria-label="Lire l'article : <?= escape($a['titre']) ?>" tabindex="-1">
                             <img class="article-image" 
                                  src="/uploads/<?= escape($a['image_principale']) ?>" 
                                  alt="<?= escape(!empty($a['image_alt']) ? $a['image_alt'] : $a['titre']) ?>"
@@ -92,7 +92,7 @@ require '../frontOffice/header.php';
                     </div>
 
                     <h3 class="article-title" style="font-size: 1.2rem; margin-top: 0.3rem;">
-                        <a href="?page=article&slug=<?= $a['slug'] ?>">
+                        <a href="<?= article_url($a) ?>">
                             <?= escape($a['titre']) ?>
                         </a>
                     </h3>
@@ -109,7 +109,7 @@ require '../frontOffice/header.php';
                 <article class="article-card bottom-grid-item">
                     <?php if (!empty($a['image_principale'])): ?>
                         <div class="image-frame">
-                            <a href="?page=article&slug=<?= $a['slug'] ?>" aria-label="Lire l'article : <?= escape($a['titre']) ?>" tabindex="-1">
+                            <a href="<?= article_url($a) ?>" aria-label="Lire l'article : <?= escape($a['titre']) ?>" tabindex="-1">
                                 <img class="article-image" 
                                      src="/uploads/<?= escape($a['image_principale']) ?>" 
                                      alt="<?= escape(!empty($a['image_alt']) ? $a['image_alt'] : $a['titre']) ?>"
@@ -123,7 +123,7 @@ require '../frontOffice/header.php';
                         <span class="article-date">Le <?= date('d/m/Y', strtotime($a['created_at'])) ?></span>
                         
                         <h4 class="article-title">
-                            <a href="?page=article&slug=<?= $a['slug'] ?>">
+                            <a href="<?= article_url($a) ?>">
                                 <?= escape($a['titre']) ?>
                             </a>
                         </h4>

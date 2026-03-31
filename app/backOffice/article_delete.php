@@ -9,4 +9,5 @@ $id = $_GET['id'];
 $stmt = $pdo->prepare("DELETE FROM articles WHERE id = :id");
 $stmt->execute(['id' => $id]);
 
-header("Location: /?page=dashboard");
+header("Location: /dashboard");
+exit;

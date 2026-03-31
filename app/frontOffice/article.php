@@ -86,7 +86,7 @@ require '../frontOffice/header.php';
         <?php foreach ($suggestedArticles as $suggested): ?>
             <article class="related-card">
                 <?php if (!empty($suggested['image_principale'])): ?>
-                    <a href="?page=article&slug=<?= $suggested['slug'] ?>" class="related-card__image-link" aria-label="Lire l'article : <?= escape($suggested['titre']) ?>" tabindex="-1">
+                    <a href="<?= article_url($suggested) ?>" class="related-card__image-link" aria-label="Lire l'article : <?= escape($suggested['titre']) ?>" tabindex="-1">
                         <div class="related-card__image-wrap">
                             <img class="related-card__image" 
                                  src="/uploads/<?= escape($suggested['image_principale']) ?>" 
@@ -101,7 +101,7 @@ require '../frontOffice/header.php';
                         <span class="category-label"><?= escape($suggested['category_name']) ?></span>
                     <?php endif; ?>
                     <h3 class="related-card__title">
-                        <a href="?page=article&slug=<?= $suggested['slug'] ?>">
+                        <a href="<?= article_url($suggested) ?>">
                             <?= escape($suggested['titre']) ?>
                         </a>
                     </h3>

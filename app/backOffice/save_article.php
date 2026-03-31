@@ -128,7 +128,7 @@ try {
         }
     }
     
-    header("Location: /?page=dashboard");
+    header("Location: /dashboard");
     exit;
 } catch (Exception $e) {
     die("Exception : " . $e->getMessage());
