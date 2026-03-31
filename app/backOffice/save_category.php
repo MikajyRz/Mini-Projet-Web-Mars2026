@@ -23,7 +23,7 @@ try {
         $stmt->execute(['name' => $name]);
     }
     
-    header("Location: /?page=categories");
+    header("Location: /categories");
     exit;
 } catch (PDOException $e) {
     if (strpos($e->getMessage(), 'unique') !== false) {

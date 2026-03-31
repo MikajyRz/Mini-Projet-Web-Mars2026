@@ -7,7 +7,7 @@ require_login();
 $id = $_GET['id'] ?? null;
 
 if (!$id) {
-    header("Location: /?page=categories");
+    header("Location: /categories");
     exit;
 }
 
@@ -22,5 +22,5 @@ try {
     die("Erreur base de données : " . $e->getMessage());
 }
 
-header("Location: /?page=categories");
+header("Location: /categories");
 exit;
